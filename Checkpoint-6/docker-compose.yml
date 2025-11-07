@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Serviço da Aplicação Spring Boot
+  api:
+    build: .
+    image: pedrorehem/microservice_checkpoint_6:latest
+    container_name: checkpoint_6_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      # Variáveis de ambiente para o perfil 'prod'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db_checkpoint
+      SPRING_DATASOURCE_USERNAME: user_checkpoint
+      SPRING_DATASOURCE_PASSWORD: password_checkpoint
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: checkpoint_6_db
+    environment:
+      POSTGRES_DB: db_checkpoint
+      POSTGRES_USER: user_checkpoint
+      POSTGRES_PASSWORD: password_checkpoint
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
